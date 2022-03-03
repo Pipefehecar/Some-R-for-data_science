@@ -5,7 +5,7 @@ library(rvest)
 library(dplyr)
 library(stringr)
 
-link_home= "http://www.theplantlist.org"
+link_home = "http://www.theplantlist.org"
 main_page =  read_html(link_home)
 
 #major_groups_scientific_name = html_nodes(main_page,"#nametree .majorgroup") %>% html_text()
@@ -14,7 +14,7 @@ major_groups_common_name = html_nodes(main_page,xpath="//*[@id='nametree']/li/a/
 major_groups_links = html_nodes(main_page,"#nametree a") %>% html_attr("href")
 
 
-num_major_groups <- length(major_groups_scientific)
+num_major_groups <- length(major_groups_scientific_name)
 
 
 plants <- data.frame()
@@ -34,5 +34,5 @@ for(i in 1:num_major_groups){
 }
 names(plants)<-c("NAME","GROUP_COMMON_NAME","GROUP_SCIENTIFIC_NAME")
 plants #imprimimos el dataset
-
+View(plants)
 write.table(plants,"plant_list-families.csv", quote=FALSE,sep=";", row.names = FALSE)
