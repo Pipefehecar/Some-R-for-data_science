@@ -143,7 +143,7 @@ scatter3d(x = ISO.result$CONCENTRACION_EV.Temperatura,
 
 # DBSCAN
 
-ipak(c("DBSCAN"))
+ipak(c("dbscan"))
 
 dbScanData <- new_data
 pivotData <- as.matrix(dbScanData[7:9])
