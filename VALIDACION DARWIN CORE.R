@@ -7,9 +7,14 @@ library(dplyr)
 import_options <- as.vector(c(".xlsx",".csx - sep(,)",".txt"))
 select_option <- select.list(import_options, multiple = FALSE, graphics = TRUE, title = "SL. Extensión")
 
-if(select_option == ".xlsx"){data <- read_excel(file.choose(), sheet = 1, col_names = TRUE, col_types = "text", na = "")
-}else if (select_option == ".csv"){data <- read.csv(file.choose())
-}else{data <- read.delim(file.choose())}
+if(select_option == ".xlsx"){
+  data <- read_excel(file.choose(), sheet = 1, col_names = TRUE, col_types = "text", na = "")
+
+}else if (select_option == ".csv"){
+  data <- read.csv(file.choose())
+}else{
+  data <- read.delim(file.choose())
+}
 
 data <- subset(data, select = c("id","scientificName","kingdom","phylum","class","order","family",
                                 "genus","taxonRank","scientificNameAuthorship"))
@@ -22,7 +27,7 @@ end_query <- "&like=false&marine_only=true"
 
 for(i in 1:length(unq_names)){
   
-  if(grepl("^\\S+\\s+", unq_names[i])){
+  if(grepl("^\\S+\\s+", unq_names[i])){#identificar espacios
     
     name <- gsub("[[:space:]]", "%20", unq_names[i])
     
@@ -41,11 +46,13 @@ for(i in 1:length(unq_names)){
   }
 }
 
-url <- "https://www.marinespecies.org/rest/AphiaRecordsByNames?scientificnames[]=Lithophyllum&scientificnames[]=Porolithon&like=false&marine_only=true"
+#url <- "https://www.marinespecies.org/rest/AphiaRecordsByNames?scientificnames[]=Lithophyllum&scientificnames[]=Porolithon&like=false&marine_only=true"
 conx <- httr::GET(url)
 url_cont <- content(conx, "text")
 data_json <- fromJSON(url_cont)
+
 query_data <- do.call("rbind", lapply(data_json, as.data.frame))
+#edit(query_data)
 query_data <- subset(query_data, select = c("AphiaID","scientificname","kingdom","phylum","class","order","family","genus","rank","authority"))
 
 data_distinct <- data %>% select(scientificName,kingdom,phylum,class,order,family,genus,taxonRank,scientificNameAuthorship) %>% distinct
